@@ -31,6 +31,14 @@
     },
     "resources": [
         {
+            "Key": "00b2ced1-f1e1-4315-b2c0-c5f1ad33c780",
+            "Value": {
+                "id": "235f08f9-52fc-4a17-9284-db90489846d6",
+                "resourcePath": "shaders\\shd_superjibby2\\shd_superjibby2.yy",
+                "resourceType": "GMShader"
+            }
+        },
+        {
             "Key": "06da937a-2371-4449-996d-89b21eeb4952",
             "Value": {
                 "id": "4526c164-a8cb-4385-8c50-1a29acdfab89",
@@ -148,6 +156,14 @@
                 "id": "c96ffc4b-6d6d-416f-8bb7-ae55d66f9c6b",
                 "resourcePath": "options\\ios\\options_ios.yy",
                 "resourceType": "GMiOSOptions"
+            }
+        },
+        {
+            "Key": "9dff66b1-6407-4ef3-a5f1-1bc8fa137486",
+            "Value": {
+                "id": "b8f6b29a-3f0e-4bcd-8225-fadf3741b548",
+                "resourcePath": "objects\\obj_converter\\obj_converter.yy",
+                "resourceType": "GMObject"
             }
         },
         {
