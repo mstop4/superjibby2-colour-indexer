@@ -1,10 +1,12 @@
-spr_palette = -1;
-palette_texture = -1;
-
 //shader stuff
 max_colors = 8;
 max_palettes = 8;
 
-u_palette_sampler = shader_get_sampler_index(shd_superjibby2, "palette_sampler");
-u_u_scale = shader_get_uniform(shd_superjibby2, "u_scale");
-u_v_scale = shader_get_uniform(shd_superjibby2, "v_scale");
+in_color = [ [0, 0, 0], [16, 16, 16], [32, 32, 32], [48, 48, 48], [64, 64, 64],		// black
+             [128, 128, 128], [144, 144, 144], [160, 160, 160], [176, 176, 176], [192, 192, 192],  // white
+			 [32, 0, 0], [64, 0, 0], [96, 0, 0], [128, 0, 0], [160, 0, 0],  // red
+			 [0, 32, 0], [0, 64, 0], [0, 96, 0], [0, 128, 0], [0, 160, 0],  // green
+			 [0, 0, 32], [0, 0, 64], [0, 0, 96], [0, 0, 128], [0, 0, 160]   //blue
+		   ];
+		   
+		   

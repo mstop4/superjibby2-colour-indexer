@@ -31,10 +31,10 @@
     },
     "resources": [
         {
-            "Key": "00b2ced1-f1e1-4315-b2c0-c5f1ad33c780",
+            "Key": "03d4f5b1-24c2-4455-af5b-6cda6976ff35",
             "Value": {
-                "id": "235f08f9-52fc-4a17-9284-db90489846d6",
-                "resourcePath": "shaders\\shd_superjibby2\\shd_superjibby2.yy",
+                "id": "a2905272-1e8f-419b-b7c6-6ccf7d685b1b",
+                "resourcePath": "shaders\\shd_superjibby\\shd_superjibby.yy",
                 "resourceType": "GMShader"
             }
         },
