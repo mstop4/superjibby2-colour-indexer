@@ -14,7 +14,7 @@ else
 	
 		var _surf_in = surface_create(_spr_w,_spr_h);
 		var _surf_out = surface_create(_spr_w,_spr_h);
-		var _pix, _r, _g, _b
+		var _pix, _r, _g, _b, _match;
 		
 		// prepare source surface
 		surface_set_target(_surf_in);
@@ -30,9 +30,20 @@ else
 					_pix = surface_getpixel(_surf_in,u,v);
 					for (var i=0; i<max_colors; i++)
 					{
+						_match = false;
+						
 						for (var j=0; j<max_palettes; j++)
 						{
+							if (_pix == in_color[i,j])
+							{
+								draw_point_color(u,v,out_color[i,j]);
+								_match = true;
+								break;
+							}
 						}
+						
+						if (_match)
+							break;
 					}
 				}
 			}
