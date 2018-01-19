@@ -12,19 +12,30 @@ else
 		var _spr_w = sprite_get_width(_spr);
 		var _spr_h = sprite_get_height(_spr);
 	
-		var _surf = surface_create(_spr_w,_spr_h);
+		var _surf_in = surface_create(_spr_w,_spr_h);
+		var _surf_out = surface_create(_spr_w,_spr_h);
+		var _pix, _r, _g, _b
+		
+		// prepare source surface
+		surface_set_target(_surf_in);
+			draw_sprite(_spr,0,0,0);
+		surface_reset_target();		
 		
 		// convert sprite to indexed sprite
-		surface_set_target(_surf);
-			shader_set(shd_superjibby2);
-			
-			texture_set_stage(u_palette_sampler,palette_texture);
-			shader_set_uniform_f(u_u_scale, 256 / max_colors);
-			shader_set_uniform_f(u_v_scale, 256 / max_palettes);
-			
-			draw_sprite(_spr,0,0,0);
-			
-			shader_reset();
+		surface_set_target(_surf_out);
+			for (var u=0; u<_spr_w; u++)
+			{
+				for (var v=0; v<_spr_h; v++)
+				{
+					_pix = surface_getpixel(_surf_in,u,v);
+					for (var i=0; i<max_colors; i++)
+					{
+						for (var j=0; j<max_palettes; j++)
+						{
+						}
+					}
+				}
+			}
 		surface_reset_target();
 		
 		// save
@@ -32,13 +43,14 @@ else
 		_fn = get_save_filename("PNG|*.png",_out_name);
 		
 		if (_fn)
-			surface_save(_surf,_fn);
+			surface_save(_surf_out,_fn);
 			
 		else
 			show_message_async("Error saving image.");
 	
 		// Clean up
-		surface_free(_surf);
+		surface_free(_surf_in);
+		surface_free(_surf_out);
 		sprite_delete(_spr);
 	}
 	
