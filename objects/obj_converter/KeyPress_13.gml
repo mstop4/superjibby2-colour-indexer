@@ -31,7 +31,7 @@ if (_fn <> "")
 						
 					for (var j=0; j<max_palettes; j++)
 					{
-						_index = i+j*max_palettes;
+						_index = i*max_palettes+j;
 						if (_pix == in_color[_index])
 						{
 							draw_point_color(u,v,out_color[_index]);
