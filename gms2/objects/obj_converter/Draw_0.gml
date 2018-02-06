@@ -1,0 +1,1 @@
+draw_text(100,100,string(v*spr_w+u) + "/" + string(spr_w*spr_h));

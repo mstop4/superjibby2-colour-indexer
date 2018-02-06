@@ -39,6 +39,14 @@
             }
         },
         {
+            "Key": "07f703ab-545d-426c-903e-9020dcd31354",
+            "Value": {
+                "id": "09c02741-3203-4e25-8416-7cf79ff78b4f",
+                "resourcePath": "datafiles_yy\\paths2.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "0b88e579-3cbc-4d6d-a55c-d1625abd4088",
             "Value": {
                 "id": "53919a0a-9e4d-41e4-ae47-507d6fac0cc6",
