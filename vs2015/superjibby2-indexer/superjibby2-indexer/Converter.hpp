@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include "png.h"
-#include "PngImage.h"
+#include "PngImage.hpp"
 
 /*	Steps to success
 1) Get input colours from input palette
