@@ -67,6 +67,12 @@ int main()
 			  << "Colour Type: " << colour_type << std::endl
 			  << "Bit Depth: " << bit_depth << std::endl;
 
+	if (colour_type == PNG_COLOR_TYPE_PALETTE)
+	{
+		std::cout << "PNG is using a palette: convert to RGB" << std::endl;
+		png_set_palette_to_rgb(png);
+	}
+
 	fclose(file_pt);
 
 	return 0;
