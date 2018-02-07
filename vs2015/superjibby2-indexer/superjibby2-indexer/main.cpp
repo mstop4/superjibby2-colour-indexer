@@ -6,15 +6,16 @@
 
 #define PNGSIGSIZE 8
 
-int main()
+int width, height;
+png_byte colour_type;
+png_byte bit_depth;
+png_bytep *row_pointers;
+
+int png_read()
 {
 	std::string filename;
 	FILE *file_pt;
 	errno_t err;
-
-	unsigned int width, height;
-	png_byte colour_type;
-	png_byte bit_depth;
 
 	std::cout << "Hello World!" << std::endl;
 
@@ -27,7 +28,7 @@ int main()
 	if (err == ENOENT)
 	{
 		std::cerr << "File not found!" << std::endl;
-		return 1;
+		return 2;
 	}
 
 	std::cout << filename << " is totally legit." << std::endl;
@@ -110,7 +111,111 @@ int main()
 
 	png_read_update_info(png, info);
 
+	row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
+	for (int y = 0; y < height; y++)
+	{
+		row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png, info));
+	}
+
+	std::cout << "Reading image" << std::endl;
+	png_read_image(png, row_pointers);
+
 	fclose(file_pt);
+
+	png_destroy_read_struct(&png, &info, NULL);
+	png = NULL;
+	info = NULL;
+
+	return 0;
+}
+
+int png_write()
+{
+	std::string filename;
+	FILE *file_pt;
+	errno_t err;
+
+	// Try saving a file
+	std::cout << "Enter a save:" << std::endl;
+	std::cin >> filename;
+
+	err = fopen_s(&file_pt, filename.c_str(), "wb");
+
+	if (err == ENOENT)
+	{
+		std::cerr << "File not found!" << std::endl;
+		return 2;
+	}
+
+	std::cout << filename << " is totally legit." << std::endl;
+
+	// Init structs
+	png_structp png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+	if (!png)
+	{
+		std::cerr << "Error: Could not initialize PNG read struct" << std::endl;
+		return 1;
+	}
+
+	png_infop info = png_create_info_struct(png);
+	if (!info)
+	{
+		std::cerr << "Error: Could not initialize PNG info struct" << std::endl;
+		return 1;
+	}
+
+	// Error handling
+	if (setjmp(png_jmpbuf(png)))
+	{
+		std::cerr << "Flagrant System Error" << std::endl;
+		return 1;
+	}
+
+	png_init_io(png, file_pt);
+
+	png_set_IHDR(
+		png,
+		info,
+		width, height,
+		8,
+		PNG_COLOR_TYPE_RGBA,
+		PNG_INTERLACE_NONE,
+		PNG_COMPRESSION_TYPE_DEFAULT,
+		PNG_FILTER_TYPE_DEFAULT
+	);
+
+	png_write_info(png, info);
+
+	png_write_image(png, row_pointers);
+	png_write_end(png, NULL);
+
+	std::cout << "Freeing memory" << std::endl;
+
+	for (int y = 0; y < height; y++)
+	{
+		free(row_pointers[y]);
+	}
+
+	free(row_pointers);
+
+	fclose(file_pt);
+
+	if (png && info)
+	{
+		png_destroy_write_struct(&png, &info);
+	}
+}
+
+int main()
+{
+	int result = png_read();
+
+	if (result == 2)
+		return 1;
+	else if (result == 1)
+		abort();
+
+	png_write();
 
 	return 0;
 } 
