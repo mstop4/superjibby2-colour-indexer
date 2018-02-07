@@ -26,12 +26,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Converter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PngImage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="png.h">
       <Filter>Header Files\libpng</Filter>
     </ClInclude>
@@ -40,6 +34,12 @@
     </ClInclude>
     <ClInclude Include="pnglibconf.h">
       <Filter>Header Files\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="Converter.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PngImage.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
