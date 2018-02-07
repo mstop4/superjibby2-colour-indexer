@@ -3,6 +3,8 @@
 Converter::Converter()
 {
 	src = new PNGImage;
+	in_pal = new PNGImage;
+	out_pal = new PNGImage;
 }
 
 int Converter::read_png(PNGImage *img)
@@ -252,5 +254,9 @@ void Converter::free_png(PNGImage *img)
 Converter::~Converter()
 {
 	free_png(src);
+	//free_png(in_pal);
+	//free_png(out_pal);
 	delete src;
+	delete in_pal;
+	delete out_pal;
 }

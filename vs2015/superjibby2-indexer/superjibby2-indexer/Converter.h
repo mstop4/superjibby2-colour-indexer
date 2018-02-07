@@ -19,7 +19,7 @@ class Converter
 {
 	public:
 
-		PNGImage* src;
+		PNGImage *src, *in_pal, *out_pal;
 
 		Converter();
 
