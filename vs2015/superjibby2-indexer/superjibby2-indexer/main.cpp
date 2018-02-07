@@ -28,7 +28,7 @@ int png_read()
 	if (err == ENOENT)
 	{
 		std::cerr << "File not found!" << std::endl;
-		return 2;
+		return 1;
 	}
 
 	std::cout << filename << " is totally legit." << std::endl;
@@ -38,21 +38,21 @@ int png_read()
 	if (!png)
 	{
 		std::cerr << "Error: Could not initialize PNG read struct" << std::endl;
-		return 1;
+		abort();
 	}
 
 	png_infop info = png_create_info_struct(png);
 	if (!info)
 	{
 		std::cerr << "Error: Could not initialize PNG info struct" << std::endl;
-		return 1;
+		abort();
 	}
 
 	// Error handling
 	if (setjmp(png_jmpbuf(png)))
 	{
 		std::cerr << "Flagrant System Error" << std::endl;
-		return 1;
+		abort();
 	}
 
 	png_init_io(png, file_pt);
@@ -144,7 +144,7 @@ int png_write()
 	if (err == ENOENT)
 	{
 		std::cerr << "File not found!" << std::endl;
-		return 2;
+		return 1;
 	}
 
 	std::cout << filename << " is totally legit." << std::endl;
@@ -154,21 +154,21 @@ int png_write()
 	if (!png)
 	{
 		std::cerr << "Error: Could not initialize PNG read struct" << std::endl;
-		return 1;
+		abort();
 	}
 
 	png_infop info = png_create_info_struct(png);
 	if (!info)
 	{
 		std::cerr << "Error: Could not initialize PNG info struct" << std::endl;
-		return 1;
+		abort();
 	}
 
 	// Error handling
 	if (setjmp(png_jmpbuf(png)))
 	{
 		std::cerr << "Flagrant System Error" << std::endl;
-		return 1;
+		abort();
 	}
 
 	png_init_io(png, file_pt);
@@ -204,16 +204,36 @@ int png_write()
 	{
 		png_destroy_write_struct(&png, &info);
 	}
+
+	return 0;
+}
+
+void process_png_file()
+{
+	for (int y = 0; y < height; y++)
+	{
+		png_bytep row = row_pointers[y];
+
+		for (int x = 0; x < width; x++)
+		{
+			png_bytep px = &(row[x * 4]);
+
+			px[0] = 255;
+
+			// Do something awesome for each pixel here...
+			printf("%4d, %4d = RGBA(%3d, %3d, %3d, %3d)\n", x, y, px[0], px[1], px[2], px[3]);
+		}
+	}
 }
 
 int main()
 {
 	int result = png_read();
 
-	if (result == 2)
+	if (result == 1)
 		return 1;
-	else if (result == 1)
-		abort();
+
+	process_png_file();
 
 	png_write();
 
