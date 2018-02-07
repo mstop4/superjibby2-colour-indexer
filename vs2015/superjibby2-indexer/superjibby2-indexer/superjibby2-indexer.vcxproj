@@ -155,6 +155,7 @@
     <ClInclude Include="Converter.h" />
     <ClInclude Include="png.h" />
     <ClInclude Include="pngconf.h" />
+    <ClInclude Include="PngImage.h" />
     <ClInclude Include="pnglibconf.h" />
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@ int main()
 {
 	Converter *c = new Converter();
 
-	int result = c->read_png();
+	int result = c->read_png(c->src);
 	if (result == 1)
 		return 1;
 

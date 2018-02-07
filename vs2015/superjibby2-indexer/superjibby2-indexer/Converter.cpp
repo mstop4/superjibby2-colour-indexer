@@ -2,9 +2,10 @@
 
 Converter::Converter()
 {
+	src = new PNGImage;
 }
 
-int Converter::read_png()
+int Converter::read_png(PNGImage *img)
 {
 	std::string filename;
 	FILE *file_pt;
@@ -52,31 +53,31 @@ int Converter::read_png()
 	png_init_io(png, file_pt);
 	png_read_info(png, info);
 
-	width = png_get_image_width(png, info);
-	height = png_get_image_height(png, info);
-	colour_type = png_get_color_type(png, info);
-	bit_depth = png_get_bit_depth(png, info);
+	img->width = png_get_image_width(png, info);
+	img->height = png_get_image_height(png, info);
+	img->colour_type = png_get_color_type(png, info);
+	img->bit_depth = png_get_bit_depth(png, info);
 
-	std::cout << "\nWidth: " << width << std::endl
-		<< "Height: " << height << std::endl
-		<< "Colour Type: " << colour_type << std::endl
-		<< "Bit Depth: " << bit_depth << std::endl;
+	std::cout << "\nWidth: " << img->width << std::endl
+		<< "Height: " << img->height << std::endl
+		<< "Colour Type: " << img->colour_type << std::endl
+		<< "Bit Depth: " << img->bit_depth << std::endl;
 
 	// Normalize PNG format
-	if (bit_depth == 16)
+	if (img->bit_depth == 16)
 	{
 		std::cout << "Strip 16-bit channels to 8-bit." << std::endl;
 		png_set_strip_16(png);
 	}
 
-	if (colour_type == PNG_COLOR_TYPE_PALETTE)
+	if (img->colour_type == PNG_COLOR_TYPE_PALETTE)
 	{
 		std::cout << "PNG is using a palette: convert to RGB." << std::endl;
 		png_set_palette_to_rgb(png);
 	}
 
 	// PNG_COLOR_TYPE_GRAY_ALPHA is always 8 or 16bit depth.
-	if (colour_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
+	if (img->colour_type == PNG_COLOR_TYPE_GRAY && img->bit_depth < 8)
 	{
 		std::cout << "Expand grayscale to 8-bit" << std::endl;
 		png_set_expand_gray_1_2_4_to_8(png);
@@ -89,16 +90,16 @@ int Converter::read_png()
 	}
 
 	// These color_type don't have an alpha channel then fill it with 0xff.
-	if (colour_type == PNG_COLOR_TYPE_RGB ||
-		colour_type == PNG_COLOR_TYPE_GRAY ||
-		colour_type == PNG_COLOR_TYPE_PALETTE)
+	if (img->colour_type == PNG_COLOR_TYPE_RGB ||
+		img->colour_type == PNG_COLOR_TYPE_GRAY ||
+		img->colour_type == PNG_COLOR_TYPE_PALETTE)
 	{
 		std::cout << "Pad with alpha channel" << std::endl;
 		png_set_filler(png, 0xFF, PNG_FILLER_AFTER);
 	}
 
-	if (colour_type == PNG_COLOR_TYPE_GRAY ||
-		colour_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+	if (img->colour_type == PNG_COLOR_TYPE_GRAY ||
+		img->colour_type == PNG_COLOR_TYPE_GRAY_ALPHA)
 	{
 		std::cout << "Covnert grayscale to RGB" << std::endl;
 		png_set_gray_to_rgb(png);
@@ -109,13 +110,13 @@ int Converter::read_png()
 	// Prepare memory space for bitmap data
 	std::cout << "Reading image" << std::endl;
 
-	row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
-	for (int y = 0; y < height; y++)
+	img->row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * img->height);
+	for (int y = 0; y < img->height; y++)
 	{
-		row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png, info));
+		img->row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png, info));
 	}
 
-	png_read_image(png, row_pointers);
+	png_read_image(png, img->row_pointers);
 
 	//Clean up
 	fclose(file_pt);
@@ -129,11 +130,11 @@ int Converter::read_png()
 
 void Converter::process_image()
 {
-	for (int y = 0; y < height; y++)
+	for (int y = 0; y < src->height; y++)
 	{
-		png_bytep row = row_pointers[y];
+		png_bytep row = src->row_pointers[y];
 
-		for (int x = 0; x < width; x++)
+		for (int x = 0; x < src->width; x++)
 		{
 			png_bytep px = &(row[x * 4]);
 
@@ -193,7 +194,7 @@ int Converter::write_png()
 	png_set_IHDR(
 		png,
 		info,
-		width, height,
+		src->width, src->height,
 		8,
 		PNG_COLOR_TYPE_RGBA,
 		PNG_INTERLACE_NONE,
@@ -204,18 +205,18 @@ int Converter::write_png()
 	png_write_info(png, info);
 
 	// Write bitmap data
-	png_write_image(png, row_pointers);
+	png_write_image(png, src->row_pointers);
 	png_write_end(png, NULL);
 
 	// Clean up
 	std::cout << "Freeing memory" << std::endl;
 
-	for (int y = 0; y < height; y++)
+	for (int y = 0; y < src->height; y++)
 	{
-		free(row_pointers[y]);
+		free(src->row_pointers[y]);
 	}
 
-	free(row_pointers);
+	free(src->row_pointers);
 
 	fclose(file_pt);
 
@@ -229,4 +230,5 @@ int Converter::write_png()
 
 Converter::~Converter()
 {
+	delete src;
 }

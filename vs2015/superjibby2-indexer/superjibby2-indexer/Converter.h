@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include "png.h"
+#include "PngImage.h"
 
 /*	Steps to success
 1) Get input colours from input palette
@@ -18,14 +19,11 @@ class Converter
 {
 	public:
 
-		int width, height;
-		png_byte colour_type;
-		png_byte bit_depth;
-		png_bytep *row_pointers;
+		PNGImage* src;
 
 		Converter();
 
-		int read_png();
+		int read_png(PNGImage *img);
 		void process_image();
 		int write_png();
 
