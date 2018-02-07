@@ -63,15 +63,52 @@ int main()
 	bit_depth = png_get_bit_depth(png, info);
 
 	std::cout << "\nWidth: " << width << std::endl
-			  << "Height: " << height << std::endl
-			  << "Colour Type: " << colour_type << std::endl
-			  << "Bit Depth: " << bit_depth << std::endl;
+		<< "Height: " << height << std::endl
+		<< "Colour Type: " << colour_type << std::endl
+		<< "Bit Depth: " << bit_depth << std::endl;
+
+	if (bit_depth == 16)
+	{
+		std::cout << "Strip 16-bit channels to 8-bit." << std::endl;
+		png_set_strip_16(png);
+	}
 
 	if (colour_type == PNG_COLOR_TYPE_PALETTE)
 	{
-		std::cout << "PNG is using a palette: convert to RGB" << std::endl;
+		std::cout << "PNG is using a palette: convert to RGB." << std::endl;
 		png_set_palette_to_rgb(png);
 	}
+
+	// PNG_COLOR_TYPE_GRAY_ALPHA is always 8 or 16bit depth.
+	if (colour_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
+	{
+		std::cout << "Expand grayscale to 8-bit" << std::endl;
+		png_set_expand_gray_1_2_4_to_8(png);
+	}
+
+	if (png_get_valid(png, info, PNG_INFO_tRNS))
+	{
+		std::cout << "Valid tRNS" << std::endl;
+		png_set_tRNS_to_alpha(png);
+	}
+
+	// These color_type don't have an alpha channel then fill it with 0xff.
+	if (colour_type == PNG_COLOR_TYPE_RGB ||
+		colour_type == PNG_COLOR_TYPE_GRAY ||
+		colour_type == PNG_COLOR_TYPE_PALETTE)
+	{
+		std::cout << "Pad with alpha channel" << std::endl;
+		png_set_filler(png, 0xFF, PNG_FILLER_AFTER);
+	}
+
+	if (colour_type == PNG_COLOR_TYPE_GRAY ||
+		colour_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+	{
+		std::cout << "Covnert grayscale to RGB" << std::endl;
+		png_set_gray_to_rgb(png);
+	}
+
+	png_read_update_info(png, info);
 
 	fclose(file_pt);
 
