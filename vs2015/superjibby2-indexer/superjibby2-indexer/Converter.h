@@ -24,8 +24,10 @@ class Converter
 		Converter();
 
 		int read_png(PNGImage *img);
+		void dump_png_data(PNGImage *img);
 		void process_image();
 		int write_png();
+		void free_png(PNGImage *img);
 
 		~Converter();
 };

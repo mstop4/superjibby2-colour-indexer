@@ -128,8 +128,25 @@ int Converter::read_png(PNGImage *img)
 	return 0;
 }
 
+void Converter::dump_png_data(PNGImage *img)
+{
+	for (int y = 0; y < src->height; y++)
+	{
+		png_bytep row = src->row_pointers[y];
+
+		for (int x = 0; x < src->width; x++)
+		{
+			png_bytep px = &(row[x * 4]);
+
+			std::cout << x << ", " << y << "-> (" << (int)px[0] << ", " << (int)px[1] << ", " << (int)px[2] << ", " << (int)px[3] << ")" << std::endl;
+		}
+	}
+}
+
 void Converter::process_image()
 {
+	std::cout << "Processing image" << std::endl;
+
 	for (int y = 0; y < src->height; y++)
 	{
 		png_bytep row = src->row_pointers[y];
@@ -141,7 +158,7 @@ void Converter::process_image()
 			px[0] = 255;
 
 			// Do something awesome for each pixel here...
-			printf("%4d, %4d = RGBA(%3d, %3d, %3d, %3d)\n", x, y, px[0], px[1], px[2], px[3]);
+			//printf("%4d, %4d = RGBA(%3d, %3d, %3d, %3d)\n", x, y, px[0], px[1], px[2], px[3]);
 		}
 	}
 }
@@ -209,15 +226,6 @@ int Converter::write_png()
 	png_write_end(png, NULL);
 
 	// Clean up
-	std::cout << "Freeing memory" << std::endl;
-
-	for (int y = 0; y < src->height; y++)
-	{
-		free(src->row_pointers[y]);
-	}
-
-	free(src->row_pointers);
-
 	fclose(file_pt);
 
 	if (png && info)
@@ -228,7 +236,21 @@ int Converter::write_png()
 	return 0;
 }
 
+void Converter::free_png(PNGImage *img)
+{
+	// Clean up
+	std::cout << "Freeing memory" << std::endl;
+
+	for (int y = 0; y < img->height; y++)
+	{
+		free(src->row_pointers[y]);
+	}
+
+	free(img->row_pointers);
+}
+
 Converter::~Converter()
 {
+	free_png(src);
 	delete src;
 }

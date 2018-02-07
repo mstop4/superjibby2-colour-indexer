@@ -8,8 +8,9 @@ int main()
 	if (result == 1)
 		return 1;
 
+	c->dump_png_data(c->src);
 	c->process_image();
-	c->write_png();
+	c->dump_png_data(c->src);
 
 	delete c;
 	return 0;
