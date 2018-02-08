@@ -18,17 +18,14 @@ void Converter::get_files(char* directory)
 			files.push_back(p);
 		}
 	}
-
-	for (std::vector<fs::path>::iterator i = files.begin(); i != files.end(); i++)
-	{
-		std::cout << *i << std::endl;
-	}
 }
 
-int Converter::read_png(char* filename, std::shared_ptr<PNGImage> img)
+int Converter::read_png(const char* filename, std::shared_ptr<PNGImage> img)
 {
 	FILE *file_pt;
 	errno_t err;
+
+	std::cout << "Loading " << filename << "." << std::endl << "---" << std::endl;
 
 	err = fopen_s(&file_pt, filename, "rb");
 
@@ -37,8 +34,6 @@ int Converter::read_png(char* filename, std::shared_ptr<PNGImage> img)
 		std::cerr << "File not found!" << std::endl;
 		return 1;
 	}
-
-	std::cout << filename << " is totally legit." << std::endl;
 
 	// Init structs
 	png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -71,10 +66,11 @@ int Converter::read_png(char* filename, std::shared_ptr<PNGImage> img)
 	img->colour_type = png_get_color_type(png, info);
 	img->bit_depth = png_get_bit_depth(png, info);
 
-	std::cout << "\nWidth: " << img->width << std::endl
+	std::cout << std::endl 
+		<< "Width: " << img->width << std::endl
 		<< "Height: " << img->height << std::endl
 		<< "Colour Type: " << img->colour_type << std::endl
-		<< "Bit Depth: " << img->bit_depth << std::endl;
+		<< "Bit Depth: " << img->bit_depth << std::endl << std::endl;
 
 	// Normalize PNG format
 	if (img->bit_depth == 16)
@@ -206,7 +202,7 @@ void Converter::process_image()
 	}
 }
 
-int Converter::write_png(char *filename, std::shared_ptr<PNGImage> img)
+int Converter::write_png(const char *filename, std::shared_ptr<PNGImage> img)
 {
 	FILE *file_pt;
 	errno_t err;
@@ -218,8 +214,6 @@ int Converter::write_png(char *filename, std::shared_ptr<PNGImage> img)
 		std::cerr << "File cannot be created!" << std::endl;
 		return 1;
 	}
-
-	std::cout << filename << " is totally legit." << std::endl;
 
 	// Init structs
 	png_structp png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);

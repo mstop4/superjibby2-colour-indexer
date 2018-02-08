@@ -25,8 +25,8 @@ class Converter
 
 		void Converter::get_files(char* directory);
 
-		int read_png(char* filename, std::shared_ptr<PNGImage> img);
-		int write_png(char *filename, std::shared_ptr<PNGImage> img);
+		int read_png(const char* filename, std::shared_ptr<PNGImage> img);
+		int write_png(const char *filename, std::shared_ptr<PNGImage> img);
 
 		void dump_png_data(std::shared_ptr<PNGImage> img);
 		void process_image();
