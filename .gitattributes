@@ -1,2 +1,4 @@
-# Ignore .yy files
-*.yy linguist-vendored
+*.yy linguist-language=Game Maker Language
+* text=auto
+
+vs/superjibby2-indexer/superjibby2-indexer/libpng/* linguist-vendored

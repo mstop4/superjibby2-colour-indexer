@@ -26,20 +26,20 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="png.h">
-      <Filter>Header Files\libpng</Filter>
-    </ClInclude>
-    <ClInclude Include="pngconf.h">
-      <Filter>Header Files\libpng</Filter>
-    </ClInclude>
-    <ClInclude Include="pnglibconf.h">
-      <Filter>Header Files\libpng</Filter>
-    </ClInclude>
     <ClInclude Include="Converter.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PngImage.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="libpng\png.h">
+      <Filter>Header Files\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="libpng\pngconf.h">
+      <Filter>Header Files\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="libpng\pnglibconf.h">
+      <Filter>Header Files\libpng</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

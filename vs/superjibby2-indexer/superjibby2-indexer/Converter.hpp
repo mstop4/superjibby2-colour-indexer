@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <vector>
 
-#include "png.h"
+#include "libpng\png.h"
 #include "PngImage.hpp"
 
 namespace fs = std::experimental::filesystem::v1;
