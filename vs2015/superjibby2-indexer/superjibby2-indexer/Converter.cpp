@@ -2,12 +2,12 @@
 
 Converter::Converter()
 {
-	src = new PNGImage;
-	in_pal = new PNGImage;
-	out_pal = new PNGImage;
+	src = std::make_shared<PNGImage>();
+	in_pal = std::make_shared<PNGImage>();
+	out_pal = std::make_shared<PNGImage>();
 }
 
-int Converter::read_png(PNGImage *img)
+int Converter::read_png(std::shared_ptr<PNGImage> img)
 {
 	std::string filename;
 	FILE *file_pt;
@@ -130,7 +130,7 @@ int Converter::read_png(PNGImage *img)
 	return 0;
 }
 
-void Converter::dump_png_data(PNGImage *img)
+void Converter::dump_png_data(std::shared_ptr<PNGImage> img)
 {
 	for (int y = 0; y < src->height; y++)
 	{
@@ -238,7 +238,7 @@ int Converter::write_png()
 	return 0;
 }
 
-void Converter::free_png(PNGImage *img)
+void Converter::free_png(std::shared_ptr<PNGImage> img)
 {
 	// Clean up
 	std::cout << "Freeing memory" << std::endl;
@@ -256,7 +256,4 @@ Converter::~Converter()
 	free_png(src);
 	//free_png(in_pal);
 	//free_png(out_pal);
-	delete src;
-	delete in_pal;
-	delete out_pal;
 }

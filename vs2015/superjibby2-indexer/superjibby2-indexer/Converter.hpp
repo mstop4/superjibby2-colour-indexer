@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <memory>
 #include <stdio.h>
 #include <errno.h>
 #include "png.h"
@@ -19,15 +20,17 @@ class Converter
 {
 	public:
 
-		PNGImage *src, *in_pal, *out_pal;
+		std::shared_ptr<PNGImage> src, in_pal, out_pal;
 
 		Converter();
 
-		int read_png(PNGImage *img);
-		void dump_png_data(PNGImage *img);
-		void process_image();
+		int read_png(std::shared_ptr<PNGImage> img);
 		int write_png();
-		void free_png(PNGImage *img);
+
+		void dump_png_data(std::shared_ptr<PNGImage> img);
+		void process_image();
+
+		void free_png(std::shared_ptr<PNGImage> img);
 
 		~Converter();
 };
