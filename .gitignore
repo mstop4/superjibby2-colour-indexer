@@ -323,3 +323,5 @@ ASALocalRun/
 *.binlog
 
 *.stackdump
+vs/superjibby2-indexer/superjibby2-indexer/unindexed/*
+vs/superjibby2-indexer/superjibby2-indexer/indexed/*
