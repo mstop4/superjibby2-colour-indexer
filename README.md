@@ -4,6 +4,6 @@ An image converter that converts the RGB data of PNG images into a special index
 
 ## Versions
 
-**gms** - A prototype made with GameMaker Studio 2. Has a barebones GUI and can only convert one image at a time.
+**gms2** - A prototype made with GameMaker Studio 2. Has a barebones GUI and can only convert one image at a time.
 
 **vs** - A command line tool that can batch convert multiple PNGs in a single directory.
