@@ -124,11 +124,11 @@ int Converter::read_png(char* filename, std::shared_ptr<PNGImage> img)
 
 void Converter::dump_png_data(std::shared_ptr<PNGImage> img)
 {
-	for (int y = 0; y < src->height; y++)
+	for (int y = 0; y < img->height; y++)
 	{
-		png_bytep row = src->row_pointers[y];
+		png_bytep row = img->row_pointers[y];
 
-		for (int x = 0; x < src->width; x++)
+		for (int x = 0; x < img->width; x++)
 		{
 			png_bytep px = &(row[x * 4]);
 
@@ -159,7 +159,7 @@ void Converter::process_image()
 
 				for (int u = 0; u < in_pal->width && !done; u++)
 				{
-					png_bytep in_px = &(in_row[x * 4]);
+					png_bytep in_px = &(in_row[u * 4]);
 					if (src_px[0] == in_px[0] &&
 						src_px[1] == in_px[1] &&
 						src_px[2] == in_px[2])
@@ -184,7 +184,7 @@ void Converter::process_image()
 	}
 }
 
-int Converter::write_png(char *filename)
+int Converter::write_png(char *filename, std::shared_ptr<PNGImage> img)
 {
 	FILE *file_pt;
 	errno_t err;
@@ -227,7 +227,7 @@ int Converter::write_png(char *filename)
 	png_set_IHDR(
 		png,
 		info,
-		src->width, src->height,
+		img->width, img->height,
 		8,
 		PNG_COLOR_TYPE_RGBA,
 		PNG_INTERLACE_NONE,
@@ -238,7 +238,7 @@ int Converter::write_png(char *filename)
 	png_write_info(png, info);
 
 	// Write bitmap data
-	png_write_image(png, src->row_pointers);
+	png_write_image(png, img->row_pointers);
 	png_write_end(png, NULL);
 
 	// Clean up
