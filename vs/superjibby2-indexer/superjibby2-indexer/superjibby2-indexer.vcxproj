@@ -160,7 +160,7 @@
     <ClInclude Include="PngImage.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="libpng16.lib" />
+    <Library Include="libpng\libpng16.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

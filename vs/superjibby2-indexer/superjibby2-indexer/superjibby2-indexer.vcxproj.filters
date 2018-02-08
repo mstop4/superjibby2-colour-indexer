@@ -43,7 +43,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="libpng16.lib">
+    <Library Include="libpng\libpng16.lib">
       <Filter>Source Files</Filter>
     </Library>
   </ItemGroup>
