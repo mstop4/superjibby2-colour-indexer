@@ -1,16 +1,28 @@
 #include "Converter.hpp"
 
+
+/*	Steps to success
+1) Get input colours from input palette
+2) Load source image
+3) Process image
+4) Save new image
+*/
+
 int main()
 {
 	Converter *c = new Converter();
 
-	int result = c->read_png(c->src);
-	if (result == 1)
-		return 1;
+	// Read input palette
+	c->read_png("in.png", c->in_pal);
 
-	c->dump_png_data(c->src);
+	// Load source image
+	c->read_png("test.png", c->src);
+
+	// Process image
 	c->process_image();
-	c->dump_png_data(c->src);
+
+	// Save new image
+	c->write_png("out.png");
 
 	delete c;
 	return 0;

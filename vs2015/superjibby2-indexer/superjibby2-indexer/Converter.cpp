@@ -4,22 +4,14 @@ Converter::Converter()
 {
 	src = std::make_shared<PNGImage>();
 	in_pal = std::make_shared<PNGImage>();
-	out_pal = std::make_shared<PNGImage>();
 }
 
-int Converter::read_png(std::shared_ptr<PNGImage> img)
+int Converter::read_png(char* filename, std::shared_ptr<PNGImage> img)
 {
-	std::string filename;
 	FILE *file_pt;
 	errno_t err;
 
-	std::cout << "Hello World!" << std::endl << std::endl;
-
-	// Try loading a file
-	std::cout << "Enter a filename:" << std::endl;
-	std::cin >> filename;
-
-	err = fopen_s(&file_pt, filename.c_str(), "rb");
+	err = fopen_s(&file_pt, filename, "rb");
 
 	if (err == ENOENT)
 	{
@@ -148,34 +140,56 @@ void Converter::dump_png_data(std::shared_ptr<PNGImage> img)
 void Converter::process_image()
 {
 	std::cout << "Processing image" << std::endl;
+	int total_pixels = src->width * src->height;
 
 	for (int y = 0; y < src->height; y++)
 	{
-		png_bytep row = src->row_pointers[y];
+		png_bytep src_row = src->row_pointers[y];
 
 		for (int x = 0; x < src->width; x++)
 		{
-			png_bytep px = &(row[x * 4]);
+			std::cout << x + y * src->width << "/" << total_pixels << std::endl;
+			png_bytep src_px = &(src_row[x * 4]);
 
-			px[0] = 255;
+			bool done = false;
 
-			// Do something awesome for each pixel here...
-			//printf("%4d, %4d = RGBA(%3d, %3d, %3d, %3d)\n", x, y, px[0], px[1], px[2], px[3]);
+			for (int v = 0; v < in_pal->height && !done; v++)
+			{
+				png_bytep in_row = in_pal->row_pointers[v];
+
+				for (int u = 0; u < in_pal->width && !done; u++)
+				{
+					png_bytep in_px = &(in_row[x * 4]);
+					if (src_px[0] == in_px[0] &&
+						src_px[1] == in_px[1] &&
+						src_px[2] == in_px[2])
+					{
+						src_px[0] = v;
+						src_px[1] = u;
+						src_px[2] = 0;
+						src_px[3] = 255;
+						done = true;
+					}
+				}
+			}
+
+			if (!done)
+			{
+				src_px[0] = 255;
+				src_px[1] = 0;
+				src_px[2] = 255;
+				src_px[3] = 255;
+			}
 		}
 	}
 }
 
-int Converter::write_png()
+int Converter::write_png(char *filename)
 {
-	std::string filename;
 	FILE *file_pt;
 	errno_t err;
 
-	// Try creating a new file for saving
-	std::cout << "Enter a save:" << std::endl;
-	std::cin >> filename;
-
-	err = fopen_s(&file_pt, filename.c_str(), "wb");
+	err = fopen_s(&file_pt, filename, "wb");
 
 	if (err == ENOENT)
 	{
@@ -245,7 +259,7 @@ void Converter::free_png(std::shared_ptr<PNGImage> img)
 
 	for (int y = 0; y < img->height; y++)
 	{
-		free(src->row_pointers[y]);
+		free(img->row_pointers[y]);
 	}
 
 	free(img->row_pointers);
@@ -254,6 +268,5 @@ void Converter::free_png(std::shared_ptr<PNGImage> img)
 Converter::~Converter()
 {
 	free_png(src);
-	//free_png(in_pal);
-	//free_png(out_pal);
+	free_png(in_pal);
 }
