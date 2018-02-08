@@ -141,6 +141,7 @@ void Converter::process_image()
 {
 	std::cout << "Processing image" << std::endl;
 	int total_pixels = src->width * src->height;
+	float progress;
 
 	for (int y = 0; y < src->height; y++)
 	{
@@ -148,7 +149,8 @@ void Converter::process_image()
 
 		for (int x = 0; x < src->width; x++)
 		{
-			std::cout << x + y * src->width << "/" << total_pixels << std::endl;
+			progress = ((float)(x + y * src->width) / (float)total_pixels) * 100.0f;
+			std::cout << "\r" << std::fixed << std::setprecision(2) << progress << "%";
 			png_bytep src_px = &(src_row[x * 4]);
 
 			bool done = false;
@@ -173,6 +175,7 @@ void Converter::process_image()
 				}
 			}
 
+			// No match was found, make pixel fuschia
 			if (!done)
 			{
 				src_px[0] = 255;
