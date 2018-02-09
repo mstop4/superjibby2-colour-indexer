@@ -203,6 +203,16 @@ int Converter::write_png(const char *filename, std::shared_ptr<PNGImage> img)
 
 	std::cout << "Saving image to \"" << filename << "\"...\n------\n" << std::endl;
 
+	// create new directory If output directory does not already exist
+	fs::path out_path = filename;
+	fs::path out_dir = out_path.parent_path();
+
+	if (!fs::exists(out_dir))
+	{
+		std::cout << "Creating new directory: " << out_dir << std::endl;
+		fs::create_directories(out_dir);
+	}
+
 	err = fopen_s(&file_pt, filename, "wb");
 
 	if (err == ENOENT)
@@ -259,6 +269,8 @@ int Converter::write_png(const char *filename, std::shared_ptr<PNGImage> img)
 	if (png && info)
 		png_destroy_write_struct(&png, &info);
 
+	free_png(src);
+
 	return 0;
 }
 
@@ -275,8 +287,16 @@ void Converter::free_png(std::shared_ptr<PNGImage> img)
 	free(img->row_pointers);
 }
 
+fs::path Converter::strip_root(const fs::path& p)
+{
+	const fs::path& parent_path = p.parent_path();
+	if (parent_path.empty() || parent_path.string() == "/")
+		return fs::path();
+	else
+		return strip_root(parent_path) / p.filename();
+}
+
 Converter::~Converter()
 {
-	free_png(src);
 	free_png(in_pal);
 }

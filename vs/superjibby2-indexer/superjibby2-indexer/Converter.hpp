@@ -33,6 +33,8 @@ class Converter
 
 		void free_png(std::shared_ptr<PNGImage> img);
 
+		fs::path strip_root(const fs::path& p);
+
 		~Converter();
 };
 

@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 		c->process_image();
 
 		// Save new image
-		std::string new_path = out_path + "\\i_" + file.filename().string();
+		std::string new_path = out_path + "\\" + c->strip_root(file).string();
 
 		result = c->write_png(new_path.c_str(), c->src);
 
