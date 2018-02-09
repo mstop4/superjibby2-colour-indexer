@@ -14,9 +14,7 @@ void Converter::get_files(char* directory)
 	for (auto& p : fs::recursive_directory_iterator(directory))
 	{
 		if (p.path().extension() == ".png")
-		{
 			files.push_back(p);
-		}
 	}
 }
 
@@ -25,7 +23,7 @@ int Converter::read_png(const char* filename, std::shared_ptr<PNGImage> img)
 	FILE *file_pt;
 	errno_t err;
 
-	std::cout << "Loading " << filename << "." << std::endl << "---" << std::endl;
+	std::cout << "Loading image from \"" << filename << "\"...\n------\n" << std::endl;
 
 	err = fopen_s(&file_pt, filename, "rb");
 
@@ -66,11 +64,7 @@ int Converter::read_png(const char* filename, std::shared_ptr<PNGImage> img)
 	img->colour_type = png_get_color_type(png, info);
 	img->bit_depth = png_get_bit_depth(png, info);
 
-	std::cout << std::endl 
-		<< "Width: " << img->width << std::endl
-		<< "Height: " << img->height << std::endl
-		<< "Colour Type: " << img->colour_type << std::endl
-		<< "Bit Depth: " << img->bit_depth << std::endl << std::endl;
+	std::cout << "Normalizing PNG format...\n" << std::endl;
 
 	// Normalize PNG format
 	if (img->bit_depth == 16)
@@ -117,13 +111,11 @@ int Converter::read_png(const char* filename, std::shared_ptr<PNGImage> img)
 	png_read_update_info(png, info);
 
 	// Prepare memory space for bitmap data
-	std::cout << "Reading image" << std::endl;
+	std::cout << "\nReading image..." << std::endl;
 
 	img->row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * img->height);
 	for (int y = 0; y < img->height; y++)
-	{
 		img->row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png, info));
-	}
 
 	png_read_image(png, img->row_pointers);
 
@@ -154,7 +146,7 @@ void Converter::dump_png_data(std::shared_ptr<PNGImage> img)
 
 void Converter::process_image()
 {
-	std::cout << "Processing image" << std::endl;
+	std::cout << "Processing image...\n------\n" << std::endl;
 	int total_pixels = src->width * src->height;
 	float progress;
 
@@ -200,12 +192,16 @@ void Converter::process_image()
 			}
 		}
 	}
+
+	std::cout << "\r" << "100.00%\n" << std::endl;
 }
 
 int Converter::write_png(const char *filename, std::shared_ptr<PNGImage> img)
 {
 	FILE *file_pt;
 	errno_t err;
+
+	std::cout << "Saving image to \"" << filename << "\"...\n------\n" << std::endl;
 
 	err = fopen_s(&file_pt, filename, "wb");
 
@@ -261,9 +257,7 @@ int Converter::write_png(const char *filename, std::shared_ptr<PNGImage> img)
 	fclose(file_pt);
 
 	if (png && info)
-	{
 		png_destroy_write_struct(&png, &info);
-	}
 
 	return 0;
 }
@@ -271,7 +265,7 @@ int Converter::write_png(const char *filename, std::shared_ptr<PNGImage> img)
 void Converter::free_png(std::shared_ptr<PNGImage> img)
 {
 	// Clean up
-	std::cout << "Freeing memory" << std::endl;
+	std::cout << "Freeing memory...\n------\n" << std::endl;
 
 	for (int y = 0; y < img->height; y++)
 	{
