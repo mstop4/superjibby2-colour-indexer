@@ -23,7 +23,7 @@ class Converter
 
 		Converter();
 
-		void Converter::get_files(char* directory);
+		int Converter::get_files(char* directory);
 
 		int read_png(const char* filename, std::shared_ptr<PNGImage> img);
 		int write_png(const char *filename, std::shared_ptr<PNGImage> img);
@@ -33,7 +33,7 @@ class Converter
 
 		void free_png(std::shared_ptr<PNGImage> img);
 
-		fs::path strip_root(const fs::path& p);
+		fs::path strip_path(const fs::path& p, fs::path path_to_strip);
 
 		~Converter();
 };

@@ -30,6 +30,8 @@ int main(int argc, char* argv[])
 	if (result == 1)
 		return 1;
 
+	fs::path root_dir = fs::path(argv[2]).parent_path();
+
 	for (auto& file: c->files)
 	{
 		// Load source image
@@ -42,7 +44,7 @@ int main(int argc, char* argv[])
 		c->process_image();
 
 		// Save new image
-		std::string new_path = out_path + "\\" + c->strip_root(file).string();
+		std::string new_path = out_path + "\\" + c->strip_path(file,root_dir).string();
 
 		result = c->write_png(new_path.c_str(), c->src);
 

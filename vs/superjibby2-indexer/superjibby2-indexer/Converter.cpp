@@ -7,15 +7,21 @@ Converter::Converter()
 }
 
 // Gets the paths of all PNG files in directory
-void Converter::get_files(char* directory)
+int Converter::get_files(char* directory)
 {
-	fs::path cur_path = fs::current_path();
+	if (!fs::exists(directory))
+	{
+		std::cout << "Error: The directory \""<< directory << "\" does not exist!" << std::endl;
+		return 1;
+	}
 
 	for (auto& p : fs::recursive_directory_iterator(directory))
 	{
 		if (p.path().extension() == ".png")
 			files.push_back(p);
 	}
+
+	return 0;
 }
 
 int Converter::read_png(const char* filename, std::shared_ptr<PNGImage> img)
@@ -274,6 +280,7 @@ int Converter::write_png(const char *filename, std::shared_ptr<PNGImage> img)
 	return 0;
 }
 
+// Frees bitmap data from memory
 void Converter::free_png(std::shared_ptr<PNGImage> img)
 {
 	// Clean up
@@ -287,13 +294,14 @@ void Converter::free_png(std::shared_ptr<PNGImage> img)
 	free(img->row_pointers);
 }
 
-fs::path Converter::strip_root(const fs::path& p)
+// Removes path_to_strip from path
+fs::path Converter::strip_path(const fs::path& p, fs::path path_to_strip)
 {
 	const fs::path& parent_path = p.parent_path();
-	if (parent_path.empty() || parent_path.string() == "/")
+	if (parent_path.empty() || parent_path == path_to_strip)
 		return fs::path();
 	else
-		return strip_root(parent_path) / p.filename();
+		return strip_path(parent_path, path_to_strip) / p.filename();
 }
 
 Converter::~Converter()
