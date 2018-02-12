@@ -4,25 +4,26 @@
 /*	Steps to success
 1) Get a list of all PNG files to be processed
 2) Get input colours from input palette
-3) Load source image
-4) Process image
-5) Save new image
+3) Get output colours from output palette
+4) Load source image
+5) Process image
+6) Save new image
 */
 
 int main(int argc, char* argv[])
 {
-	if (argc != 4)
+	if (argc != 5)
 	{
-		std::cout << "Usage: sj2i [in_palette] [src_dir] [dest_dir]" << std::endl;
+		std::cout << "Usage: sj2i <in_palette> <out_palette> <src_dir> <dest_dir>" << std::endl;
 		return 1;
 	}
 
 	Converter *c = new Converter();
 	int result;
-	std::string out_path = argv[3];
+	std::string out_path = argv[4];
 
 	// Get a list of all PNG files to be processed
-	c->get_files(argv[2]);
+	c->get_files(argv[3]);
 
 	// Read input palette
 	result = c->read_png(argv[1], c->in_pal);
@@ -30,7 +31,13 @@ int main(int argc, char* argv[])
 	if (result == 1)
 		return 1;
 
-	fs::path root_dir = fs::path(argv[2]).parent_path();
+	// Read output palette
+	result = c->read_png(argv[2], c->out_pal);
+
+	if (result == 1)
+		return 1;
+
+	fs::path root_dir = fs::path(argv[3]).parent_path();
 
 	for (auto& file: c->files)
 	{
