@@ -18,7 +18,7 @@ class Converter
 {
 	public:
 
-		std::shared_ptr<PNGImage> src, in_pal;
+		std::shared_ptr<PNGImage> src, in_pal, out_pal;
 		std::vector<fs::path> files;
 
 		Converter();
