@@ -4,6 +4,7 @@ Converter::Converter()
 {
 	src = std::make_shared<PNGImage>();
 	in_pal = std::make_shared<PNGImage>();
+	out_pal = std::make_shared<PNGImage>();
 }
 
 // Gets the paths of all PNG files in directory
@@ -179,10 +180,14 @@ void Converter::process_image()
 						src_px[1] == in_px[1] &&
 						src_px[2] == in_px[2])
 					{
-						src_px[0] = v;
-						src_px[1] = u;
-						src_px[2] = 0;
-						src_px[3] = 255;
+						// Assign out palette colour to pixel
+						png_bytep out_row = out_pal->row_pointers[v];
+						png_bytep out_px = &(out_row[u * 4]);
+
+						src_px[0] = out_px[0];
+						src_px[1] = out_px[1];
+						src_px[2] = out_px[2];
+						src_px[3] = out_px[3];
 						done = true;
 					}
 				}
@@ -307,4 +312,5 @@ fs::path Converter::strip_path(const fs::path& p, fs::path path_to_strip)
 Converter::~Converter()
 {
 	free_png(in_pal);
+	free_png(out_pal);
 }
